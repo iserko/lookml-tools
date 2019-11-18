@@ -29,64 +29,44 @@ Full original documentation is [here](README_GRAPHER.md).
 
 Clone this repository:
 ```
- git clone https://github.com/Cimpress-MCP/lookml-tools.git
+git clone https://github.com/Cimpress-MCP/lookml-tools.git
 ```
 
-Install the dependencies:
+To run the grapher for any Looker project repository, you will need to install grapviz and other dependencies:
 ```
 cd lookml-tools/
-```
-```
 pip install -r requirements.txt
-```
-
-To run the grapher for any Looker project repository, you will need to install grapviz:
-```
 brew install graphviz
 ```
 
-You can install the Python codebase of `lookml-tools` via pip:
-```
-  pip install lookml-tools
-```
-
-Clone the repository of the Looker project into lookml-tools/config/grapher, e.g.:
+You will need to copy the repository of the Looker project into lookml-tools/config/grapher. For example, you can clone a git repository of your Looker project:
 ```
 cd config/grapher
-```
-```
-git clone https://gitlab.com/.../my_looker_project.git
+git clone https://.../my_looker_project.git
 ```
 
-Run the grapher to build the lineage of the LookML objects in your Looker project:
+Run the grapher to build the "network diagram" of your Looker project and view the result:
 ```
 python ../../run_grapher.py --config config_grapher.json
-```
-
-View the lineage of the LookML objects in your Looker project:
-
-```
 open graph.png
 ```
 
-By default it creates a "network diagram" for the whole Looker project. This is configured in config_grapher.json file:
+By default the full "network diagram" of the Looker project is constructed. This is configured in config_grapher.json file:
 ```
 -- config_grapher.json
 
 ...
-      "roots": ["*"]
-        
+      "roots": ["*"]        
 }
 ```
 
-To build a connected subgraph of dependencies based on the given root nodes, adjust the config_grapher.json file by including the names of the root views or explores, e.g.,
+To build a connected subgraph based on the given root nodes, adjust the config_grapher.json file by including the names of the root views or explores, e.g.,
 
 ```
 -- config_grapher.json
 
 ...
-      "roots": ["root_view1.view", "root_view2.view"]
-        
+      "roots": ["root_view1.view", "root_view2.view"]        
 }
 ```
 
