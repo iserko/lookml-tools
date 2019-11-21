@@ -1,6 +1,0 @@
-{
-    "definitions": {
-        "type": "CsvDefinitionsProvider",
-        "filename": "definitions.csv"
-    }
-}

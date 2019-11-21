@@ -7,12 +7,16 @@ import glob
 import os
 import logging
 import datetime
+import re
 from enum import Enum
 import networkx as nx
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from lkmltools.config import config
 from lkmltools.lookml import LookML
+
+log = logging.getLogger(__name__)
 
 
 class NoLookMLFilesFound(Exception):
@@ -36,12 +40,9 @@ class LookMlGrapher():
         and creates an image showing the relationship among the models, explores and views
     '''
 
-    def __init__(self, config):
+    def __init__(self):
         '''instantiate this grapher
-        Args:
-            config (JSON): JSON configuration
         '''
-        self.config = config
 
         # list of edge pair names
         self.models_to_explores = []
@@ -105,7 +106,7 @@ class LookMlGrapher():
         plt.title(title, fontsize=20)
         plt.tight_layout()
         plt.savefig(filename, format="PNG")
-        logging.info("Graph written to %s", filename)
+        log.info("Graph written to %s", filename)
 
     def tag_orphans(self):
         '''find any orphaned views and tag them as orphan node type
@@ -122,6 +123,7 @@ class LookMlGrapher():
                 if self.node_map[child] == NodeType.EXPLORE:
                     explored = True
             if not explored:
+                log.info(view)
                 self.node_map[view] = NodeType.ORPHAN
 
     def orphans(self):
@@ -145,16 +147,15 @@ class LookMlGrapher():
         [g.add_edge(p[0], p[1],weight=8) for p in self.explores_to_explores]
         [g.add_edge(p[0], p[1],weight=8) for p in self.views_to_views]
         # return a connected subgraph (lineage) if the 'root' nodes were provided
-        #if 'roots' in self.config:
-        if self.config['roots']!=["*"]:
-            nodes = self.get_connected_subgraph(self.config['roots'])
+        # if 'roots' in config:
+        if config['grapher']['roots'] != ["*"]:
+            nodes = self.get_connected_subgraph(config['grapher']['roots'])
             for node in nodes:
                 print(node)
             subg = g.subgraph(nodes)
             return subg
         # return a full graph with lineage for the project
         return g
-
 
     def process_explores(self, m, e):
         '''extract the views referenced by these explores and
@@ -204,6 +205,13 @@ class LookMlGrapher():
         '''
         view_name =v['name']+'.view'
         self.node_map[view_name] = NodeType.VIEW
+        derived_table_sql = v.get('derived_table', {}).get('sql')
+        if derived_table_sql:
+            matches = re.findall(r'\${([^}]+)\.SQL_TABLE_NAME}', derived_table_sql)
+            for parent in set(matches):
+                self.node_map[parent +'.view'] = NodeType.VIEW
+                self.views_to_views.append((parent +'.view', view_name))
+
         if 'extends' in v:
             # add relationships to the views that are being extended (inherited)
             for parent in v['extends']:
@@ -247,7 +255,7 @@ class LookMlGrapher():
         for globstring in globstrings:
             for filepath in glob.glob(globstring):
                 assert os.path.exists(filepath)
-                logging.info("Processing " + filepath)
+                log.info("Processing " + filepath)
                 lookml = LookML(filepath)
                 self.process_lookml(lookml)
         if not self.node_map:
@@ -261,18 +269,17 @@ class LookMlGrapher():
                 nothing. Saves an image file, specified in the config
         '''
         timestr = datetime.datetime.now().strftime("%Y-%m-%d")
-        globstrings = self.config['infile_globs']
+        globstrings = config['infile_globs']
         self.extract_graph_info(globstrings)
         g = self.create_graph()
 
         args = {}
         args['g'] = g
-        args['filename'] = self.config['output']
+        args['filename'] = config['grapher']['output']
         args['title'] = " ".join(globstrings) + " as of " + timestr
-        if 'options' in self.config:
-            args.update(self.config['options'])
+        args.update(config['grapher']['options'])
 
-        logging.info("Setting the following options: %s" % args)
+        log.info("Setting the following options: %s" % args)
 
         self.plot_graph(**args)
 
