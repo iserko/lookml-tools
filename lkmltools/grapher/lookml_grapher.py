@@ -14,6 +14,16 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from lkmltools.lookml import LookML
 
+
+class NoLookMLFilesFound(Exception):
+    def __init__(self, globstrings):
+        self._globstrings = globstrings
+
+    def __str__(self):
+        return 'No LookML Files were found using glob strings: {}'.format(
+            self._globstrings)
+
+
 class NodeType(Enum):
     '''types of node'''
     MODEL = 'model'
@@ -235,14 +245,14 @@ class LookMlGrapher():
                 and self.views_to_explores are completed
         '''
         for globstring in globstrings:
-            if list(glob.glob(globstring)) == []:
-                raise Exception("Invalid glob %s" % globstring)
-
             for filepath in glob.glob(globstring):
                 assert os.path.exists(filepath)
                 logging.info("Processing " + filepath)
                 lookml = LookML(filepath)
                 self.process_lookml(lookml)
+        if not self.node_map:
+            # node_map is empty, which means we found no LookML files
+            raise NoLookMLFilesFound(globstrings)
         self.tag_orphans()
 
     def run(self):

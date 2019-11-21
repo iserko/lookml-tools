@@ -1,6 +1,7 @@
 {
     "infile_globs": [
-        "*/*.*.lkml"
+        "*.*.lkml",
+        "**/*.*.lkml"
     ],
 
     "output": "graph.png",
