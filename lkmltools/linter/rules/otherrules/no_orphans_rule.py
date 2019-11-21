@@ -1,30 +1,31 @@
-'''
+"""
     Authors:
             Carl Anderson (carl.anderson@weightwatchers.com)
 
-'''
+"""
 import logging
 from lkmltools.grapher.lookml_grapher import LookMlGrapher
 from lkmltools.linter.rule import Rule
 
+
 class NoOrphansRule(Rule):
-    '''
+    """
         Look for views unreferenced by any explores
-    '''
+    """
 
     def __init__(self, config):
-        '''Initialize the rule
+        """Initialize the rule
 
         Args:
             config (JSON): configuration
 
-        '''
+        """
         self.config = config
         self.grapher = LookMlGrapher(config)
         self.view_dict = {}
 
     def run(self, json_data):
-        '''run the rule
+        """run the rule
 
         Args:
             json_data (JSON): json_data of the lkml-parsed JSON dictionary for this file
@@ -36,11 +37,11 @@ class NoOrphansRule(Rule):
 
                 passed (bool): did the rule pass?
 
-        '''
-        pass # pragma: no cover
+        """
+        pass  # pragma: no cover
 
     def process_lookml(self, lookml):
-        '''process the JSON_DATA of a file, delegating down to the grapher
+        """process the JSON_DATA of a file, delegating down to the grapher
             also store metadata we'll need in a later stage
 
         Args:
@@ -49,7 +50,7 @@ class NoOrphansRule(Rule):
         Returns:
             nothing. side effect is to store data in grapher and in this class
 
-        '''
+        """
         self.grapher.process_lookml(lookml)
         # we'll need the view_namme->filename mapping to output later
         if lookml.has_views():
@@ -59,7 +60,7 @@ class NoOrphansRule(Rule):
             self.view_dict[view_name] = filepath
 
     def finish_up(self, file_out):
-        '''find the orphans, if any, and add results to file_out
+        """find the orphans, if any, and add results to file_out
 
         Args:
             file_out (list): list of results for files
@@ -67,7 +68,7 @@ class NoOrphansRule(Rule):
         Returns:
             file_out (list)
 
-        '''
+        """
         self.grapher.tag_orphans()
         orphans = self.grapher.orphans()
         for orphan in orphans:
@@ -75,4 +76,4 @@ class NoOrphansRule(Rule):
             logging.info("Found orphan %s in %s", orphan, simple_filepath)
             out = {"file": simple_filepath, "rule": self.name(), "passed": 0}
             file_out.append(out)
-        return (file_out)
+        return file_out

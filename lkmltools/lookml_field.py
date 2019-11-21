@@ -1,5 +1,4 @@
-
-class LookMLField():
+class LookMLField:
     """A view field such a dimension, dimension_group, or measure"""
 
     def __init__(self, json_data):
@@ -19,7 +18,7 @@ class LookMLField():
             bool: whether this is a dimension
 
         """
-        return self._type == 'dimension'
+        return self._type == "dimension"
 
     def is_dimension_group(self):
         """is this a dimension_group?
@@ -28,7 +27,7 @@ class LookMLField():
             bool: whether this is a dimension_group
 
         """
-        return self._type == 'dimension_group'
+        return self._type == "dimension_group"
 
     def is_measure(self):
         """is this a measure?
@@ -37,7 +36,7 @@ class LookMLField():
             bool: whether this is a measure
 
         """
-        return self._type == 'measure'
+        return self._type == "measure"
 
     def has_key(self, k):
         """does this have a key k?

@@ -1,8 +1,8 @@
-
 import pytest
 from unittest.mock import patch
 import pandas as pd
 from lkmltools.updater.mysql_reader import MySQLReader
+
 
 def test_get_credentials():
     config = {
@@ -13,7 +13,7 @@ def test_get_credentials():
             "password": "mysecret",
             "port": 3306,
             "host": "127.0.0.1",
-            "database": "mydb"
+            "database": "mydb",
         }
     }
     reader = MySQLReader(config)

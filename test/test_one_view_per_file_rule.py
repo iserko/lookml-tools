@@ -4,6 +4,7 @@ import os
 from lkmltools.linter.rules.filerules.one_view_per_file_rule import OneViewPerFileRule
 from conftest import get_lookml_from_raw_lookml
 
+
 def test_run():
     raw_lookml = """
       view: first_view {
@@ -18,12 +19,13 @@ def test_run():
         }
       }
     """
-    lookml = get_lookml_from_raw_lookml(raw_lookml, 'tmp.view')
+    lookml = get_lookml_from_raw_lookml(raw_lookml, "tmp.view")
     relevant, passed = OneViewPerFileRule().run(lookml)
     assert relevant
     assert not passed
     if os.path.exists(lookml.infilepath):
-      os.remove(lookml.infilepath)
+        os.remove(lookml.infilepath)
+
 
 def test_run2():
     raw_lookml = """
@@ -33,12 +35,13 @@ def test_run2():
         }
       }
     """
-    lookml = get_lookml_from_raw_lookml(raw_lookml, 'tmp.view')
-    relevant, passed = OneViewPerFileRule().run(lookml)  
+    lookml = get_lookml_from_raw_lookml(raw_lookml, "tmp.view")
+    relevant, passed = OneViewPerFileRule().run(lookml)
     assert relevant
     assert passed
     if os.path.exists(lookml.infilepath):
-      os.remove(lookml.infilepath)
+        os.remove(lookml.infilepath)
+
 
 def test_run3():
     raw_lookml = """
@@ -47,9 +50,9 @@ def test_run3():
         explore: an_explore {
         }
     """
-    lookml = get_lookml_from_raw_lookml(raw_lookml, 'tmp.model')
-    relevant, passed = OneViewPerFileRule().run(lookml)    
+    lookml = get_lookml_from_raw_lookml(raw_lookml, "tmp.model")
+    relevant, passed = OneViewPerFileRule().run(lookml)
     assert not relevant
     assert not passed
     if os.path.exists(lookml.infilepath):
-      os.remove(lookml.infilepath)
+        os.remove(lookml.infilepath)

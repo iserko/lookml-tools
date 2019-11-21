@@ -132,7 +132,7 @@ def main():
         level=logging.INFO,
     )
     if args.glob:
-        config['infile_globs'] = args.glob
+        config["infile_globs"] = args.glob
     logger = logging.getLogger("lkmltools")
     logger.setLevel(log_level)
     args.func(args)

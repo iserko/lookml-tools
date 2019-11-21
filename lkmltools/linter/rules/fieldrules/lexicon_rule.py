@@ -1,19 +1,20 @@
-'''a lexicon rule: check that field name or description does not mention certain words or phrases provided int the config
+"""a lexicon rule: check that field name or description does not mention certain words or phrases provided int the config
 
 Authors:
         Carl Anderson (carl.anderson@weightwatchers.com)
 
-'''
+"""
 from lkmltools.linter.field_rule import FieldRule
 from lkmltools.lookml_field import LookMLField
 
+
 class LexiconRule(FieldRule):
-    '''does dimension, dimension group, or measure follow some lexicon rules, 
+    """does dimension, dimension group, or measure follow some lexicon rules, 
        i.e. not mention certain words or phrases in name or description?
-    '''
+    """
 
     def run(self, lookml_field):
-        '''apply some lexion rules: check that the field name or description does not mention certain words or 
+        """apply some lexion rules: check that the field name or description does not mention certain words or 
         phrases provided int the config
 
         Args:
@@ -26,8 +27,12 @@ class LexiconRule(FieldRule):
 
                 passed (bool): did the rule pass?
 
-        '''
-        if not (lookml_field.is_dimension() or lookml_field.is_dimension_group() or lookml_field.is_measure()):
+        """
+        if not (
+            lookml_field.is_dimension()
+            or lookml_field.is_dimension_group()
+            or lookml_field.is_measure()
+        ):
             return False, None
 
         if not self.has_key("phrases"):
@@ -44,7 +49,11 @@ class LexiconRule(FieldRule):
                 passed = False
                 break
 
-            if  lookml_field.has_key('description') and lookml_field.description != "" and phrase in lookml_field.description:
+            if (
+                lookml_field.has_key("description")
+                and lookml_field.description != ""
+                and phrase in lookml_field.description
+            ):
                 passed = False
                 break
 

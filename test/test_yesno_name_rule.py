@@ -2,6 +2,7 @@ import pytest
 from lkmltools.linter.rules.fieldrules.yesno_name_rule import YesNoNameRule
 from conftest import get_1st_dimension, get_1st_measure
 
+
 def test_run():
     raw_lookml = """
       view: aview {
@@ -15,6 +16,7 @@ def test_run():
     assert relevant
     assert not passed
 
+
 def test_run2():
     raw_lookml = """
       view: aview {
@@ -27,6 +29,7 @@ def test_run2():
     relevant, passed = YesNoNameRule().run(dj)
     assert relevant
     assert passed
+
 
 def test_run3():
     raw_lookml = """

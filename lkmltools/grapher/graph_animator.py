@@ -5,10 +5,10 @@ import imageio
 from datetime import datetime
 from lkmltools.grapher.lookml_grapher import LookMlGrapher
 
-class GraphAnimator():
 
+class GraphAnimator:
     def __init__(self, config):
-        '''
+        """
             {
                 "infile_globs": [
                     "../somerepo/*.lkml"
@@ -22,11 +22,11 @@ class GraphAnimator():
                     "image_height" : 8
                 }
             }
-        '''
+        """
         self.config = config
 
     def create_gif(self, path_to_repo, branch, directory, gif_filename):
-        '''create an animated GIF given path to a repo
+        """create an animated GIF given path to a repo
 
         Args:
             path_to_repo (str): path to the git repo
@@ -37,13 +37,13 @@ class GraphAnimator():
         Returns:
             nothing. Side effect is to save a GIF file at gif_filename
 
-        '''
+        """
         repo, commits = self.get_commits(path_to_repo, branch)
         image_filenames = self.generate_images(repo, commits, directory)
         self.generate_gif(image_filenames, gif_filename)
 
-    def get_commits(self, path_to_repo, branch='master'):
-        '''get the list of commits from a repo
+    def get_commits(self, path_to_repo, branch="master"):
+        """get the list of commits from a repo
 
         Args:
             path_to_repo (str): path to the git repo
@@ -53,15 +53,15 @@ class GraphAnimator():
             repo (Repo): git Repo
             commits (list): list of commits in going forward in time (oldest -> newest)
 
-        '''
+        """
         repo = git.Repo(path_to_repo)
         commits = list(repo.iter_commits(branch))
-        #reverse as we want oldest first so that gif goes forward in time
+        # reverse as we want oldest first so that gif goes forward in time
         commits.reverse()
         return repo, commits
 
     def generate_images(self, repo, commits, directory):
-        '''given a set of commits, run the LookML grapher to produce one image per commit
+        """given a set of commits, run the LookML grapher to produce one image per commit
 
         Args:
             commits (list): list of commits in going forward in time (oldest -> newest)
@@ -70,7 +70,7 @@ class GraphAnimator():
         Returns:
             nothing. Side effect is to create a set of images in a directory
 
-        '''
+        """
         filenames = []
         for i, commit in enumerate(commits):
 
@@ -78,7 +78,7 @@ class GraphAnimator():
 
             ts = int(commit.committed_date)
 
-            dt = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+            dt = datetime.utcfromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
 
             logging.info("Processing %d %s %s" % (i, commit.message, dt))
 
@@ -87,8 +87,8 @@ class GraphAnimator():
             # add some metadata to the config...
             config = self.config
             filename = directory + os.path.sep + "img" + str(i) + ".png"
-            config['output'] = filename
-            config['options']['title'] = dt
+            config["output"] = filename
+            config["options"]["title"] = dt
 
             filenames.append(filename)
 
@@ -96,12 +96,12 @@ class GraphAnimator():
                 grapher = LookMlGrapher(config).run()
             except Exception as e:
                 print("issue with " + str(i) + "," + commit_id)
-                #raise e
-            
+                # raise e
+
         return filenames
 
     def generate_gif(self, filenames, gif_filename):
-        '''create an animated GIF given a list of images
+        """create an animated GIF given a list of images
 
         Args:
             filenames (list): list of image filenames, ordered in required sequence
@@ -110,7 +110,7 @@ class GraphAnimator():
         Returns:
             nothing. Side effect is to save a GIF file at gif_filename
 
-        '''
+        """
         images = []
         for filename in filenames:
             if os.path.exists(filename):

@@ -1,11 +1,13 @@
-'''
+"""
     a rule factory
 
     Authors:
         Carl Anderson (carl.anderson@weightwatchers.com)
-'''
+"""
 from lkmltools.linter.rules.filerules.one_view_per_file_rule import OneViewPerFileRule
-from lkmltools.linter.rules.filerules.filename_viewname_match_rule import FilenameViewnameMatchRule
+from lkmltools.linter.rules.filerules.filename_viewname_match_rule import (
+    FilenameViewnameMatchRule,
+)
 from lkmltools.linter.rules.filerules.data_source_rule import DataSourceRule
 from lkmltools.linter.rules.fieldrules.description_rule import DescriptionRule
 from lkmltools.linter.rules.fieldrules.all_caps_rule import AllCapsRule
@@ -15,10 +17,12 @@ from lkmltools.linter.rules.fieldrules.drill_down_rule import DrillDownRule
 from lkmltools.linter.rules.fieldrules.lexicon_rule import LexiconRule
 import logging
 
-class RuleFactory():
-    '''
+
+class RuleFactory:
+    """
         Singleton Factory where one can register Rules for instantiation
-    '''
+    """
+
     instance = None
 
     def __init__(self):
@@ -50,11 +54,11 @@ class RuleFactory():
                 "CountNameRule": CountNameRule,
                 "DrillDownRule": DrillDownRule,
                 "YesNoNameRule": YesNoNameRule,
-                "LexiconRule": LexiconRule
+                "LexiconRule": LexiconRule,
             }
 
         def instantiate(self, class_name, json_config=None):
-            '''instantiate instances of rule, given name of rule class
+            """instantiate instances of rule, given name of rule class
 
             Args:
                 class_name (str): name of the class
@@ -62,7 +66,7 @@ class RuleFactory():
             Returns:
                 instance (Rule): instance of a rule
 
-            '''
+            """
             return self.name_dict[class_name](json_config)
 
         def register(self, key, class_obj):
@@ -76,7 +80,7 @@ class RuleFactory():
                 nothing. Side effect is to register the class
 
             """
-            #FIXME do we want to warn/raise on overwriting?
+            # FIXME do we want to warn/raise on overwriting?
             self.name_dict[key] = class_obj
             logging.debug("Registered %s : %s" % (key, class_obj))
 

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class AbstractRule(ABC):
     """Abstract rule that can take a JSON configuration object"""
 
@@ -23,8 +24,8 @@ class AbstractRule(ABC):
         """
         if self.config_dict:
             return key in self.config_dict
-        return False 
-    
+        return False
+
     def config_for_key(self, key):
         if self.config_dict and key in self.config_dict:
             return self.config_dict[key]

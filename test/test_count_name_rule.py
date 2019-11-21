@@ -2,6 +2,7 @@ import pytest
 from lkmltools.linter.rules.fieldrules.count_name_rule import CountNameRule
 from conftest import get_1st_measure, get_1st_dimension
 
+
 def test_run():
     raw_lookml = """
       view: aview {
@@ -15,6 +16,7 @@ def test_run():
     assert relevant
     assert passed
 
+
 def test_run2():
     raw_lookml = """
       view: aview {
@@ -27,6 +29,7 @@ def test_run2():
     relevant, passed = CountNameRule().run(mj)
     assert relevant
     assert not passed
+
 
 def test_run3():
     raw_lookml = """

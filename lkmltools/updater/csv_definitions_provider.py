@@ -1,11 +1,12 @@
-'''
+"""
 
     Authors:
             Carl Anderson (carl.anderson@weightwatchers.com)
-'''
+"""
 import os
 import pandas as pd
 from lkmltools.updater.definition_provider import DefinitionProvider
+
 
 class CsvDefinitionsProvider(DefinitionProvider):
     """
@@ -13,12 +14,12 @@ class CsvDefinitionsProvider(DefinitionProvider):
     """
 
     def get_definitions(self):
-        '''get the definitions from the master source
+        """get the definitions from the master source
 
         Returns:
             df (pandas dataframe): dataframe
 
-        '''
-        filename = self.config["definitions"]['filename']
+        """
+        filename = self.config["definitions"]["filename"]
         assert os.path.exists(filename)
         return pd.read_csv(filename)
